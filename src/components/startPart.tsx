@@ -16,12 +16,12 @@ const StartPart: React.FC = () => {
 
   const fetchDataToStartPart = async () => {
     try {
-      const data = await getDataNow("Novosibirsk");
+      const data = await getDataNow("London");
       setData(data);
       const objInfoText: ItextInfo = {
         header: "It`s new weather app!!!",
         text: "There you can find information about every place in the world! Just type city below this block! Try now!",
-        icon: "c",
+        icon: "sunny",
       };
 
       setInfoText(objInfoText);
