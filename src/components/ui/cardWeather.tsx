@@ -6,11 +6,9 @@ const CardWeather: React.FC<{ cardInfo: IserverInfo; colorBg: string }> = ({
   cardInfo,
   colorBg,
 }) => {
-  console.log(cardInfo.weather[0]);
-
   return (
     <div
-      className={`text-white w-3/4  backdrop-blur-xl ${colorBg} rounded-lg self-center p-4`}
+      className={`text-white md:w-3/4 backdrop-blur-xl ${colorBg} rounded-lg self-center p-4 mx-4`}
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center border-b-2">

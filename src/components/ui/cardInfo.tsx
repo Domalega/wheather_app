@@ -10,7 +10,7 @@ const CardInfo: React.FC<{
 }> = ({ cardInfo, colorBg, colorText }) => {
   return (
     <div
-      className={`${colorText} w-3/4 py-10 backdrop-blur-xl ${colorBg} rounded-lg self-center p-4`}
+      className={`${colorText} md:w-3/4 backdrop-blur-xl ${colorBg} rounded-lg self-center p-4 mx-4`}
     >
       <div className="flex flex-col gap-4 items-center">
         <div className="border-b-2">

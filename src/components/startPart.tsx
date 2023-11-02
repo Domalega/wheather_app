@@ -31,14 +31,14 @@ const StartPart: React.FC = () => {
   };
 
   return (
-    <div className="h-screen container-img">
+    <div className="h-screen container-img flex flex-col">
       <h1 className="text-white text-4xl font-extrabold pl-10 pt-10">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-white from-sky-400">
           Weather
         </span>
         _App
       </h1>
-      <div className="h-full grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
+      <div className="grid flex-1 h-full overflow-y-auto grid-cols-1 md:grid-cols-2 justify-stretch">
         {infoText && (
           <CardInfo
             cardInfo={infoText}
@@ -46,6 +46,7 @@ const StartPart: React.FC = () => {
             colorText="text-white"
           />
         )}
+
         {data && <CardWeather cardInfo={data} colorBg={"bg-blue-500/40"} />}
       </div>
     </div>
