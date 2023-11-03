@@ -23,6 +23,7 @@ interface Isys {
 }
 
 export interface IserverInfo {
+  code: number;
   base: string;
   clouds: number;
   coord: {
@@ -30,6 +31,7 @@ export interface IserverInfo {
     lat: number;
   };
   dt: number;
+  dt_text: string;
   id: number;
   main: ImainTemp;
   name: string;
@@ -41,4 +43,12 @@ export interface IserverInfo {
     speed: number;
     deg: number;
   };
+}
+
+export interface IserverInfoList {
+  cod: number;
+  city: string;
+  cnt: number;
+  list: IserverInfo[];
+  message: string;
 }
