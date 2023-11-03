@@ -54,7 +54,7 @@ const WeatherPart: React.FC = () => {
           </div>
         </div>
         {serverData && (
-          <div className="grid grid-cols-2 overflow-auto h-1/2 my-4">
+          <div className="grid md:grid-cols-2 overflow-auto h-1/2 my-4">
             {serverData.list.map((hourInfo) => (
               <>
                 <CardWeatherHour
