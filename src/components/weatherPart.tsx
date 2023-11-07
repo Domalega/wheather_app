@@ -1,14 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getData } from "../services/mainService";
 import { IserverInfoList } from "../models/sererInfo";
 import CardWeatherHour from "./ui/cardWeatherHour";
 
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const WeatherPart: React.FC = () => {
   const [serverData, setServerData] = useState<IserverInfoList>();
-  const [inputValue, setInputValue] = useState<any>("");
+  const [inputValue, setInputValue] = useState<string>("");
   const [errorInputValue, setErrorInputValue] = useState<string>("");
+  const [slidesToShow, setSlidesToShow] = useState(2);
 
-  const fetchDataToStartPart = async (value: any) => {
+  useEffect(() => {
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const handleResize = () => {
+    if (window.innerWidth < 1024) setSlidesToShow(1);
+    else setSlidesToShow(2);
+  };
+
+  const fetchDataToStartPart = async (value: string) => {
     try {
       const data: IserverInfoList = await getData(value);
       console.log(data);
@@ -53,18 +72,47 @@ const WeatherPart: React.FC = () => {
             {errorInputValue && <div>{errorInputValue}</div>}
           </div>
         </div>
+
         {serverData && (
-          <div className="grid md:grid-cols-2 overflow-auto h-1/2 my-4">
-            {serverData.list.map((hourInfo) => (
-              <>
-                <CardWeatherHour
-                  key={hourInfo.dt}
-                  cardInfo={hourInfo}
-                  colorBg="bg-white/20"
-                  colorText="text-white"
-                />
-              </>
-            ))}
+          <div className="overflow-auto">
+            <h1 className="text-2xl text-white text-center my-2">
+              Weather at
+              <span className="border-b-2 font-bold">{inputValue}</span>
+            </h1>
+            <div className="overflow-auto">
+              <Slider
+                className="bg-white/20 rounded-lg mx-10"
+                accessibility={true}
+                speed={1000}
+                responsive={[
+                  {
+                    breakpoint: 1024,
+                    settings: {
+                      slidesPerRow: 3,
+                      slidesToShow: 1,
+                      slidesToScroll: 1,
+                    },
+                  },
+                  {
+                    breakpoint: 768,
+                    settings: {
+                      slidesPerRow: 2,
+                      slidesToShow: 1,
+                      slidesToScroll: 1,
+                    },
+                  },
+                ]}
+              >
+                {serverData.list.map((hourInfo) => (
+                  <CardWeatherHour
+                    key={hourInfo.dt}
+                    cardInfo={hourInfo}
+                    colorBg="bg-white/20"
+                    colorText="text-white"
+                  />
+                ))}
+              </Slider>
+            </div>
           </div>
         )}
       </div>

@@ -15,6 +15,7 @@ export const getData = async (cityName: string): Promise<any> => {
   const response = await fetch(
     `${URL_API}?q=${cityName}&units=metric&appid=${API_KEY}`
   );
+
   const data = await response.json();
   return data;
 };
