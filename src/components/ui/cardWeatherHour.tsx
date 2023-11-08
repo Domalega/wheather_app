@@ -6,13 +6,11 @@ const CardWeatherHour: React.FC<{
   colorText: string;
   colorBg: string;
 }> = ({ cardInfo, colorText, colorBg }) => {
-  console.log(cardInfo, colorText, colorBg);
-
-  const [date, setDate] = useState<Date | null>(null);
+  const [date, setDate] = useState<string | null>(null);
 
   useEffect(() => {
     if (cardInfo.dt) {
-      setDate(new Date(cardInfo.dt * 1000));
+      setDate(new Date(cardInfo.dt * 1000).toDateString());
     }
   }, [cardInfo.dt]);
 

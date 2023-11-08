@@ -23,6 +23,7 @@ interface Isys {
 }
 
 export interface IserverInfo {
+  counter: number;
   code: number;
   base: string;
   clouds: number;

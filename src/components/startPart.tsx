@@ -17,7 +17,6 @@ const StartPart: React.FC = () => {
   const fetchDataToStartPart = async () => {
     try {
       const data = await getDataNow("London");
-      console.log(data);
 
       setData(data);
       const objInfoText: ItextInfo = {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getData } from "../services/mainService";
-import { IserverInfoList } from "../models/sererInfo";
+import { IserverInfo, IserverInfoList } from "../models/sererInfo";
 import CardWeatherHour from "./ui/cardWeatherHour";
 
 import Slider from "react-slick";
@@ -8,38 +8,70 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const WeatherPart: React.FC = () => {
-  const [serverData, setServerData] = useState<IserverInfoList>();
+  const [serverDataFiltered, setServerDataFiltered] =
+    useState<IserverInfoList>();
   const [inputValue, setInputValue] = useState<string>("");
   const [errorInputValue, setErrorInputValue] = useState<string>("");
-  const [slidesToShow, setSlidesToShow] = useState(2);
-
-  useEffect(() => {
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  const handleResize = () => {
-    if (window.innerWidth < 1024) setSlidesToShow(1);
-    else setSlidesToShow(2);
-  };
 
   const fetchDataToStartPart = async (value: string) => {
     try {
       const data: IserverInfoList = await getData(value);
-      console.log(data);
+
       if (data.cod != 200) {
         setErrorInputValue("Uncorrect city name! Try again");
         return;
       }
+      filterData(data);
       setErrorInputValue("");
-      setServerData(data);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const filterData = (data: IserverInfoList) => {
+    const ArrayOfDays: IserverInfo[] = [];
+    data.list.forEach((dataEl) => {
+      const date = new Date(dataEl.dt * 1000);
+      const day = date.getDay();
+
+      if (!ArrayOfDays[day]) {
+        ArrayOfDays[day] = dataEl;
+        ArrayOfDays[day].counter = 1;
+      } else {
+        if (ArrayOfDays[day].counter !== undefined)
+          ArrayOfDays[day].counter += 1;
+
+        ArrayOfDays[day].main.feels_like += dataEl.main.feels_like;
+        ArrayOfDays[day].main.temp += dataEl.main.temp;
+        ArrayOfDays[day].main.temp_max += dataEl.main.temp_max;
+        ArrayOfDays[day].main.temp_min += dataEl.main.temp_min;
+      }
+    });
+
+    ArrayOfDays.forEach((dataEl) => {
+      dataEl.main.feels_like = parseFloat(
+        (dataEl.main.feels_like / dataEl.counter).toFixed(2)
+      );
+      dataEl.main.temp = parseFloat(
+        (dataEl.main.temp / dataEl.counter).toFixed(2)
+      );
+      dataEl.main.temp_max = parseFloat(
+        (dataEl.main.temp_max / dataEl.counter).toFixed(2)
+      );
+      dataEl.main.temp_min = parseFloat(
+        (dataEl.main.temp_min / dataEl.counter).toFixed(2)
+      );
+    });
+
+    const ArrayOfDaysList: IserverInfoList = {
+      list: ArrayOfDays,
+      cod: 0,
+      city: "",
+      cnt: 0,
+      message: "",
+    };
+
+    setServerDataFiltered(ArrayOfDaysList);
   };
 
   const handleSearchClick = () => {
@@ -73,7 +105,7 @@ const WeatherPart: React.FC = () => {
           </div>
         </div>
 
-        {serverData && (
+        {serverDataFiltered && (
           <div className="overflow-auto">
             <h1 className="text-2xl text-white text-center my-2">
               Weather at
@@ -103,7 +135,7 @@ const WeatherPart: React.FC = () => {
                   },
                 ]}
               >
-                {serverData.list.map((hourInfo) => (
+                {serverDataFiltered.list.map((hourInfo) => (
                   <CardWeatherHour
                     key={hourInfo.dt}
                     cardInfo={hourInfo}
